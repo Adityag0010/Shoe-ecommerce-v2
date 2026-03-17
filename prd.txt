@@ -1,0 +1,44 @@
+PRODUCT REQUIREMENTS DOCUMENT (PRD)
+Project Name: Urban Sole – Shoe E-commerce Platform
+Team Members: Aditya Gupta, Divya Musahib, Vivaan Chheda, Nischal Mainali, Aadhaar Goel
+This project was first developed as an End-Semester Project the previous semester. Building on that foundation, it will be enhanced with industry-grade improvements, professional architecture, and advanced functionality to align with real-world production standards.
+PART 1 — NEW FEATURES ADDED
+1. Product Image Management (Cloudinary Integration)
+• Admin can upload thumbnails, hover, and multiple side images per product.
+• Images uploaded using Multer + Cloudinary with memory-based buffer streams.
+• ProductImages schema stores Cloudinary URLs and links them to Product.
+• Admin panel includes an 'Add Images' modal per product row.
+2. Order Email Notification (Resend API)
+• Automatic order confirmation email sent after successful checkout.
+• Includes order ID, items summary, pricing, and delivery timeline.
+• Built using async Resend API integration.
+3. Advanced Admin Dashboard
+• Displays sales analytics, revenue charts, low-stock alerts, and user activity.
+• Built with Chart.js/Recharts and protected routes.
+4. Order History for Users
+• Users can view past orders, items, status timeline, and download receipts.
+5. Coupons & Promo Codes
+• Supports percentage and flat discounts.
+• Admin can create/update coupons with expiry & usage limits.
+PART 2 — SYSTEM OPTIMIZATIONS
+1. Code Splitting & Lazy Loading
+• Reduced initial 700MB bundle size drastically using React.lazy(), Suspense, and dynamic imports.
+• The admin panel moved into a separate chunk for improved loading time.
+2. Image Optimization Improvements
+• Cloudinary WebP & auto-quality compression applied.
+• Responsive image resizing enabled.
+3. MongoDB Indexing
+• Added indexes on product.name, product.category, cart.userId, and order.userId.
+• Achieved up to 100x faster search and retrieval.
+4. Rate Limiting & Security Enhancements
+• Implemented API rate limiting to prevent request abuse.
+• Added Helmet.js security headers and strict CORS policies.
+5. Caching Layer (Redis/LRU)
+• Cached homepage products, categories, and frequent search queries.
+• Reduced server load and improved API response time.
+6. Logging & Monitoring
+• Winston logger added for activity tracking & error debugging.
+• Future-ready architecture for ELK or New Relic integration.
+7. SEO Enhancements
+• Added meta tags, fixed robots.txt, and improved semantic structure.
+• Improved Lighthouse SEO score significantly.

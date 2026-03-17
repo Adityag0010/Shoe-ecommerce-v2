@@ -1,0 +1,13 @@
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒöÉ encrypt with Dotenvx: https://dotenvx.com
+MONGODB_URI from env: undefined
+MONGODB CONNECTION FAILED:  MongoParseError: Invalid scheme, expected connection string to start with "mongodb://" or "mongodb+srv://"
+    at new ConnectionString (E:\shoe-ecommerce\backend\node_modules\mongodb-connection-string-url\lib\index.js:86:19)
+    at parseOptions (E:\shoe-ecommerce\backend\node_modules\mongodb\lib\connection_string.js:197:17)
+    at new MongoClient (E:\shoe-ecommerce\backend\node_modules\mongodb\lib\mongo_client.js:68:61)
+    at NativeConnection.createClient (E:\shoe-ecommerce\backend\node_modules\mongoose\lib\drivers\node-mongodb-native\connection.js:343:14)
+    at NativeConnection.openUri (E:\shoe-ecommerce\backend\node_modules\mongoose\lib\connection.js:1075:34)
+    at Mongoose.connect (E:\shoe-ecommerce\backend\node_modules\mongoose\lib\mongoose.js:450:15)
+    at connectDB (file:///E:/shoe-ecommerce/backend/src/db/connectDB.js:10:51)
+    at file:///E:/shoe-ecommerce/backend/src/server.js:25:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:647:26)
