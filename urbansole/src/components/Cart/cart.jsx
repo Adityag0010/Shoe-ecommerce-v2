@@ -30,7 +30,7 @@ const CartPage = () => {
     return Math.floor(Math.random() * (5)) + 6;
  }
 
-  const API_BASE_URL = 'https://api-shoe-ecommerce.onrender.com/api/v1';
+  const API_BASE_URL = 'http://localhost:5000/api/v1';
 
   const fetchCart = async () => {
     try {

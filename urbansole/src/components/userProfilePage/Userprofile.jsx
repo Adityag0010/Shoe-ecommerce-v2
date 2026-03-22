@@ -41,7 +41,7 @@ const ProfilePage = () => {
     // This function fetches the user's profile data from the backend
     const fetchProfileData = async () => {
       try {
-        const response = await axios.get('https://api-shoe-ecommerce.onrender.com/api/v1/users/profile', {
+        const response = await axios.get('http://localhost:5000/api/v1/users/profile', {
           withCredentials: true 
         });
         
@@ -71,7 +71,7 @@ const ProfilePage = () => {
     const fetchOrderHistory = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('https://api-shoe-ecommerce.onrender.com/api/v1/orders', {
+        const response = await axios.get('http://localhost:5000/api/v1/orders', {
           withCredentials: true 
         });        
         setOrderHistory(response?.data?.data);
@@ -97,7 +97,7 @@ const ProfilePage = () => {
   
   const handleLogout = async () => {
     try {
-      await axios.post('https://api-shoe-ecommerce.onrender.com/api/v1/auth/logout', {}, {
+      await axios.post('http://localhost:5000/api/v1/auth/logout', {}, {
         withCredentials: true 
       });
       navigate('/');
@@ -144,8 +144,44 @@ const ProfilePage = () => {
 
         {/* Accordion Sections */}
         <Section title="My Orders" icon={<ShoppingBag className='text-gray-600' size={24} />} sectionName="orders" openSection={openSection} toggleSection={toggleSection}>
-          
-          <p className="text-gray-500 text-sm">You haven't placed any orders yet. Start shopping now!</p>
+          {orderHistory && orderHistory.length > 0 ? (
+            <div className="space-y-4">
+              {orderHistory.slice(0, 3).map((order) => (
+                <div key={order._id} className="flex items-center space-x-4 p-4 border border-gray-100 rounded-2xl bg-gray-50 hover:bg-white transition-colors">
+                  <div className="w-16 h-16 flex-shrink-0 bg-white rounded-xl overflow-hidden shadow-sm">
+                    {order.firstItemImage ? (
+                      <img src={order.firstItemImage} alt="Order item" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                        <ShoppingBag className="text-gray-400" size={24} />
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-gray-800">Order #{order._id.slice(-6).toUpperCase()}</p>
+                    <p className="text-xs text-gray-500 mt-1">{new Date(order.createdAt).toLocaleDateString()} • {order.totalItems || 0} item{(order.totalItems !== 1) && 's'}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-bold text-gray-900">₹{order.totalAmount}</p>
+                    <p className={`text-xs mt-1 capitalize font-medium ${order.currentStatus === 'delivered' ? 'text-green-600' : 'text-blue-600'}`}>
+                      {order.currentStatus}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-6">
+              <div className="w-16 h-16 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                <ShoppingBag size={28} />
+              </div>
+              <p className="text-gray-800 font-medium">Really excited to see what you gonna purchase!</p>
+              <p className="text-gray-500 text-sm mt-1">Start exploring our collection and find your perfect pair.</p>
+              <Link to="/" className="inline-block mt-4 px-6 py-2 bg-gray-900 text-white text-sm font-medium rounded-full hover:bg-gray-800 transition-colors">
+                Start Shopping
+              </Link>
+            </div>
+          )}
         </Section>
 
         <Section title="Wishlist" icon={<Heart className='text-gray-600' size={24} />} sectionName="wishlist" openSection={openSection} toggleSection={toggleSection}>

@@ -66,12 +66,37 @@ export const createOrder = asyncHandler(async (req, res) => {
 });
 
 export const getOrders = asyncHandler(async (req, res) => {
-    const orders = await Order.find({ userId: req.user.id });
+    const orders = await Order.find({ userId: req.user.id }).sort({ createdAt: -1 });
+
+    const ordersWithDetails = await Promise.all(orders.map(async (order) => {
+        const items = await OrderItem.find({ orderId: order._id }).populate({
+            path: 'productId',
+            populate: {
+                path: 'imageSet',
+                model: 'ProductImage'
+            }
+        });
+
+        let totalItems = 0;
+        let firstItemImage = null;
+
+        if (items.length > 0) {
+            totalItems = items.reduce((acc, item) => acc + item.quantity, 0);
+            firstItemImage = items[0].productId?.imageSet?.thumbnail;
+        }
+
+        return {
+            ...order.toObject(),
+            totalItems,
+            firstItemImage
+        };
+    }));
+
     res.status(200).json(
         new ApiResponse(
             200,
             "Orders fetched successfully",
-            orders
+            ordersWithDetails
         )
     );
 });
