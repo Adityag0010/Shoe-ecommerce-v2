@@ -13,7 +13,7 @@ import {
   Bar,
 } from 'recharts';
 import { Package, TrendingUp, AlertTriangle, Users } from 'lucide-react';
-import '../index.css';
+import '../../index.css';
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -41,24 +41,25 @@ export default function AdminDashboard() {
     { name: 'Sports', sales: 200 },
   ];
 
-  // In a real app, you would fetch data from the advanced admin dashboard endpoints
-  /*
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const { data } = await axios.get('/api/v1/orders/analytics', { withCredentials: true });
-        setStats(data.stats);
-        // ... set chart data
+        const { data } = await axios.get('http://localhost:5000/api/v1/admin/dashboard', { withCredentials: true });
+        console.log("Dashboard API response:", data);
+        if (data && data.data) {
+          setStats(data.data);
+        } else {
+          console.warn("Unexpected response format:", data);
+        }
       } catch (error) {
         console.error("Failed to load dashboard data", error);
       }
     };
     fetchDashboardData();
   }, []);
-  */
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-6 bg-gray-50 flex-1 overflow-auto rounded-xl h-full">
       <h1 className="text-3xl font-bold mb-8 text-gray-800 tracking-tight">Admin Dashboard</h1>
 
       {/* Top Stats Cards */}
@@ -66,7 +67,7 @@ export default function AdminDashboard() {
         <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center justify-between hover:shadow-md transition-shadow">
           <div>
             <p className="text-sm text-gray-500 font-medium mb-1">Total Revenue</p>
-            <p className="text-2xl font-bold text-gray-900">${stats.totalSales.toLocaleString()}</p>
+            <p className="text-2xl font-bold text-gray-900">${stats?.totalSales?.toLocaleString() || '0'}</p>
           </div>
           <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-blue-600">
             <TrendingUp size={24} />
@@ -76,7 +77,7 @@ export default function AdminDashboard() {
         <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center justify-between hover:shadow-md transition-shadow">
           <div>
             <p className="text-sm text-gray-500 font-medium mb-1">Total Orders</p>
-            <p className="text-2xl font-bold text-gray-900">{stats.totalOrders}</p>
+            <p className="text-2xl font-bold text-gray-900">{stats?.totalOrders || 0}</p>
           </div>
           <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center text-green-600">
             <Package size={24} />
@@ -86,7 +87,7 @@ export default function AdminDashboard() {
         <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center justify-between hover:shadow-md transition-shadow">
           <div>
             <p className="text-sm text-gray-500 font-medium mb-1">Active Users</p>
-            <p className="text-2xl font-bold text-gray-900">{stats.activeUsers}</p>
+            <p className="text-2xl font-bold text-gray-900">{stats?.activeUsers || 0}</p>
           </div>
           <div className="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center text-purple-600">
             <Users size={24} />
@@ -96,7 +97,7 @@ export default function AdminDashboard() {
         <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center justify-between hover:shadow-md transition-shadow">
           <div>
             <p className="text-sm text-gray-500 font-medium mb-1">Low Stock Alerts</p>
-            <p className="text-2xl font-bold text-red-600">{stats.lowStockItems}</p>
+            <p className="text-2xl font-bold text-red-600">{stats?.lowStockItems || 0}</p>
           </div>
           <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center text-red-600">
             <AlertTriangle size={24} />

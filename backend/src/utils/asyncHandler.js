@@ -10,16 +10,7 @@
 // }
 
 export const asyncHandler = (requestHandler) => {
-    return async (req , res , next) => {
-        Promise.resolve(requestHandler(req , res , next))
-        .catch((error) => {
-            const statusCode = Number(error.code);
-            const validStatus = statusCode >= 100 && statusCode < 600 ? statusCode : 500;
-            res.status(validStatus)
-            .json({
-                success: false,
-                message: error.message || "INTERNAL SERVER ERROR"
-            })
-        })
+    return (req, res, next) => {
+        Promise.resolve(requestHandler(req, res, next)).catch((err) => next(err));
     }
 }

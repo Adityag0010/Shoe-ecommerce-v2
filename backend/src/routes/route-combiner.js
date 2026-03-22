@@ -10,6 +10,7 @@ import paymentRoutes from "./payment.routes.js";
 import reviewRoutes from "./review.routes.js";
 import productImageRoutes from "./productImage.routes.js";
 import couponRoutes from "./coupon.routes.js";
+import adminRoutes from "./admin.routes.js";
 import { getProductDescriptions } from "../controllers/product.controller.js";
 
 const router = Router();
@@ -24,6 +25,7 @@ router.use("/payments", paymentRoutes);
 router.use("/reviews", reviewRoutes);
 router.use("/product-images", productImageRoutes);
 router.use("/coupons", couponRoutes);
+router.use("/admin", adminRoutes);
 
 // Add route for productDescriptions
 // router.get("/productDescriptions", getProductDescriptions);

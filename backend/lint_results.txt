@@ -1,0 +1,39 @@
+﻿
+> backend@1.0.0 lint
+> eslint src/
+
+
+C:\Users\mradi\OneDrive\Desktop\Shoe-ecommerce-v2\backend\src\controllers\auth.controller.js
+  15:14  warning  'error' is defined but never used  no-unused-vars
+
+C:\Users\mradi\OneDrive\Desktop\Shoe-ecommerce-v2\backend\src\controllers\category.controller.js
+   8:13  error  'ApiResponse' is not defined  no-undef
+  20:13  error  'ApiResponse' is not defined  no-undef
+
+C:\Users\mradi\OneDrive\Desktop\Shoe-ecommerce-v2\backend\src\controllers\order.controller.js
+  14:11  warning  'orderItems' is assigned a value but never used  no-unused-vars
+  38:11  warning  'fullOrder' is assigned a value but never used   no-unused-vars
+
+C:\Users\mradi\OneDrive\Desktop\Shoe-ecommerce-v2\backend\src\controllers\productImage.controller.js
+  50:13  error  'ApiResponse' is not defined  no-undef
+
+C:\Users\mradi\OneDrive\Desktop\Shoe-ecommerce-v2\backend\src\controllers\review.controller.js
+  8:13  error  'ApiResponse' is not defined  no-undef
+
+C:\Users\mradi\OneDrive\Desktop\Shoe-ecommerce-v2\backend\src\controllers\user.controller.js
+  20:14  warning  'err' is defined but never used  no-unused-vars
+
+C:\Users\mradi\OneDrive\Desktop\Shoe-ecommerce-v2\backend\src\routes\productImage.routes.js
+  5:10  warning  'get' is defined but never used  no-unused-vars
+
+C:\Users\mradi\OneDrive\Desktop\Shoe-ecommerce-v2\backend\src\routes\route-combiner.js
+  13:10  warning  'getProductDescriptions' is defined but never used  no-unused-vars
+
+C:\Users\mradi\OneDrive\Desktop\Shoe-ecommerce-v2\backend\src\services\mail.service.js
+  12:14  error  Parsing error: Identifier 'sendMail' has already been declared
+
+C:\Users\mradi\OneDrive\Desktop\Shoe-ecommerce-v2\backend\src\services\stripe.service.js
+  16:9  error  There is no `cause` attached to the symptom error being thrown  preserve-caught-error
+
+Γ£û 12 problems (6 errors, 6 warnings)
+

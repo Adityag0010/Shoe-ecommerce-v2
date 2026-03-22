@@ -17,7 +17,7 @@ const NewArrivalSection = () => {
   const fetchShoes = async () => {    
     try {
       const response = 
-        await axios.get("https://api-shoe-ecommerce.onrender.com/api/v1/products/filter/attribute",{
+        await axios.get("http://localhost:5000/api/v1/products/filter/attribute",{
           params: { attribute: "newArrival", limit: 16 }
         });
       setShoes(response?.data?.data);
@@ -33,7 +33,7 @@ const NewArrivalSection = () => {
   }, []);
   
   const arr = [0,0,0,0]
-  if (loading || data.length < 4) {
+  if (loading) {
     return(
      <>
         <div className="w-full mx-auto px-24 py-12 bg-white">
@@ -68,9 +68,13 @@ const NewArrivalSection = () => {
         </a>
       </div>
 
-      <CardCarousel
-        shoes={filteredData}
-      />
+      {filteredData.length > 0 ? (
+        <CardCarousel shoes={filteredData} />
+      ) : (
+        <div className="w-full text-center py-20 text-xl text-gray-400 font-semibold border-2 border-dashed border-gray-100 rounded-lg">
+          No items matching the criteria
+        </div>
+      )}
     
     </div>
   );

@@ -1,5 +1,6 @@
 import { Category } from "../models/model-export.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 export const createCategory = asyncHandler(async (req, res) => {
     const category = await Category.create(req.body);

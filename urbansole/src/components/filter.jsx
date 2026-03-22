@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { ChevronDown, X } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { ChevronDown, X, Search } from "lucide-react";
 
 function Dropdown({ label, options, isOpen, onToggle, onSelect, selected }) {
   return (
@@ -58,6 +58,21 @@ function PriceRangeSlider({ min, max, value, onChange }) {
 
 export default function FilterBar({ selectedFilters, onFilterChange, onReset, priceConfig }) {
   const [openDropdown, setOpenDropdown] = useState(null);
+  const [searchTerm, setSearchTerm] = useState(selectedFilters.search || "");
+
+  useEffect(() => {
+    setSearchTerm(selectedFilters.search || "");
+  }, [selectedFilters.search]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      // Only fire if the debounced term differs from the one in selectedFilters
+      if (searchTerm !== (selectedFilters.search || "")) {
+        onFilterChange((prev) => ({ ...prev, search: searchTerm }));
+      }
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchTerm, selectedFilters.search, onFilterChange]);
 
   const filterOptions = {
     "Sort by": ["Popularity", "Newest", "Price: Low to High", "Price: High to Low"],
@@ -80,7 +95,22 @@ export default function FilterBar({ selectedFilters, onFilterChange, onReset, pr
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-4 px-20 bg-white shadow-sm py-3">
+    <div className="flex flex-wrap items-center gap-4 px-20 bg-white shadow-sm py-3 border-b border-gray-100">
+      
+      {/* Search Input */}
+      <div className="relative w-72">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <Search className="h-5 w-5 text-gray-400" />
+        </div>
+        <input
+          type="text"
+          placeholder="Search collections..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-black focus:border-black sm:text-sm text-black transition-colors duration-200"
+        />
+      </div>
+
       {Object.entries(filterOptions).map(([label, options], idx) => (
         <Dropdown
           key={idx}
@@ -103,7 +133,7 @@ export default function FilterBar({ selectedFilters, onFilterChange, onReset, pr
 
       <button 
         onClick={onReset}
-        className="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700"
+        className="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 transition-colors duration-200"
       >
         <X size={16} className="mr-1"/>
         Reset

@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import ProductTable from "./ProductTable";
 import AddProductModal from "./AddProductModal";
 import UpdateProductModal from "./UpdateProductModal";
+import AdminDashboard from "./AdminDashboard";
+import Customers from "./Customers";
 
 
 const dummyProducts = [
@@ -122,7 +125,7 @@ const Header = () => (
 );
 
 const AdminPanelApp = () => {
-  const [activeTab, setActiveTab] = useState("products");
+  const [activeTab, setActiveTab] = useState("dashboard");
   const [searchTerm, setSearchTerm] = useState("");
   const [products, setProducts] = useState(dummyProducts);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -130,6 +133,8 @@ const AdminPanelApp = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
   const fetchProducts = async () => {
     console.log("Fetching products...");
 
@@ -137,7 +142,7 @@ const AdminPanelApp = () => {
     setError(null);
     try {
       const response = await axios.get(
-        "https://api-shoe-ecommerce.onrender.com/api/v1/products"
+        "http://localhost:5000/api/v1/products"
       );
       console.log("got the data : ", response?.data);
 
@@ -158,7 +163,7 @@ const AdminPanelApp = () => {
     try {
       console.log("New Product Data:", newProduct);
       const response = await axios.post(
-        "https://api-shoe-ecommerce.onrender.com/api/v1/products",
+        "http://localhost:5000/api/v1/products",
         newProduct,
         { withCredentials: true }
       );
@@ -182,7 +187,7 @@ const AdminPanelApp = () => {
     console.log("Saving updated product id :", updatedProduct);
     try {
       const response = await axios.put(
-        `https://api-shoe-ecommerce.onrender.com/api/v1/products/${id}`,
+        `http://localhost:5000/api/v1/products/${id}`,
         updatedProduct,
         { withCredentials: true }
       );
@@ -207,7 +212,7 @@ const AdminPanelApp = () => {
       return;
     try {
       await axios.delete(
-        `https://api-shoe-ecommerce.onrender.com/api/v1/products/${id}`,
+        `http://localhost:5000/api/v1/products/${id}`,
         { withCredentials: true }
       );
       setProducts(products.filter((p) => p._id !== id));
@@ -221,30 +226,44 @@ const AdminPanelApp = () => {
 
       <div className="flex mt-20 h-screen bg-gray-100 px-10 py-5 font-sans">
         <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} className="w-1/5" />
-        <div className="w-4/5 flex flex-col pl-2">
+        <div className="w-4/5 flex flex-col pl-2 h-full overflow-hidden">
           <Header />
-          <ProductTable
-            products={products}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            onEditProduct={handleEditProduct}
-            onDeleteProduct={handleDeleteProduct}
-            onAddClick={() => setIsModalOpen(true)}
-          />
-          <AddProductModal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            onSave={handleAddProduct}
-          />
+          
+          <div className="flex-1 overflow-auto mt-4">
+            {activeTab === 'dashboard' && <AdminDashboard />}
+            
+            {activeTab === 'products' && (
+              <>
+                <ProductTable
+                  products={products}
+                  searchTerm={searchTerm}
+                  setSearchTerm={setSearchTerm}
+                  onEditProduct={handleEditProduct}
+                  onDeleteProduct={handleDeleteProduct}
+                  onAddClick={() => setIsModalOpen(true)}
+                />
+                <AddProductModal
+                  isOpen={isModalOpen}
+                  onClose={() => setIsModalOpen(false)}
+                  onSave={handleAddProduct}
+                />
 
-          {isEditModalOpen && selectedProduct && (
-            <UpdateProductModal
-              isOpen={isEditModalOpen}
-              onClose={() => setIsEditModalOpen(false)}
-              product={selectedProduct}
-              onSave={handleSaveUpdate}
-            />
-          )}
+                {isEditModalOpen && selectedProduct && (
+                  <UpdateProductModal
+                    isOpen={isEditModalOpen}
+                    onClose={() => setIsEditModalOpen(false)}
+                    product={selectedProduct}
+                    onSave={handleSaveUpdate}
+                  />
+                )}
+              </>
+            )}
+
+            {activeTab === 'customers' && <Customers />}
+
+            {activeTab === 'reports' && <div className="p-6">Reports section coming soon...</div>}
+            {activeTab === 'messages' && <div className="p-6">Messages section coming soon...</div>}
+          </div>
         </div>
       </div>
 

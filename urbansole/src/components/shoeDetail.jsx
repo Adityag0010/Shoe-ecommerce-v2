@@ -71,7 +71,7 @@ const ShoeDetail = () => {
         const checkLoginStatus = async () => {
             try {
                 const res = await axios.get(
-                    'https://api-shoe-ecommerce.onrender.com/api/v1/auth/check',
+                    'http://localhost:5000/api/v1/auth/check',
                     { withCredentials: true }
                 );
                 if (res.data.data.isLoggedIn) {
@@ -95,7 +95,7 @@ const ShoeDetail = () => {
             console.log("Fetching shoes data for detail show...");
             setLoading(true)
             try {
-                const response = await axios.get(`https://api-shoe-ecommerce.onrender.com/api/v1/products/${id}`);
+                const response = await axios.get(`http://localhost:5000/api/v1/products/${id}`);
                 setShoe(response?.data?.data);
                 setRelatedShoes(response?.data?.data)
             }catch (error) {
@@ -116,7 +116,7 @@ const ShoeDetail = () => {
     const fetchRelatedShoe = async () => {
         try {
         const response = await axios.get(
-            "https://api-shoe-ecommerce.onrender.com/api/v1/products/filter/related",
+            "http://localhost:5000/api/v1/products/filter/related",
             {
             params: {
                 gender: shoe?.for,
@@ -165,7 +165,7 @@ const ShoeDetail = () => {
 
         try {
             await axios.post(
-                "https://api-shoe-ecommerce.onrender.com/api/v1/cart", 
+                "http://localhost:5000/api/v1/cart", 
                 { productId : shoe._id }, 
                 { withCredentials: true }
             );

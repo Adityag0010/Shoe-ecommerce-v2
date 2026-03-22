@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import { sendMail } from './mailer.js' // Assuming you have a separate file for sendMail
+// Removed conflicting sendMail import
 
 const transporter = nodemailer.createTransport({
     service: "gmail",

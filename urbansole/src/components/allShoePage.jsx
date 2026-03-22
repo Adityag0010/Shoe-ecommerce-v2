@@ -119,7 +119,7 @@ export default function AllShoePage() {
       }
 
       const response = await axios.get(
-        `https://api-shoe-ecommerce.onrender.com/api/v1/products/filter/${suffix}`,
+        `http://localhost:5000/api/v1/products/filter/${suffix}`,
         { params }
       );
 
@@ -136,7 +136,7 @@ export default function AllShoePage() {
   fetchShoes();
 }, [queryType_]);
 
-  if (loading || shoesData.length < 4) {
+  if (loading) {
     const Arr = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     return (
       <>
@@ -184,6 +184,16 @@ export default function AllShoePage() {
   Object.entries(selectedFilters).forEach(([filterKey, filterValue]) => {
     if (!filterValue) return;
     switch (filterKey) {
+      case 'search':
+        filteredShoes = filteredShoes.filter(shoe => {
+          const query = filterValue.toLowerCase();
+          return (
+            shoe.name.toLowerCase().includes(query) || 
+            (shoe.brand && shoe.brand.toLowerCase().includes(query)) ||
+            (shoe.description && shoe.description.toLowerCase().includes(query))
+          );
+        });
+        break;
       case 'Brand':
         filteredShoes = filteredShoes.filter(shoe => shoe.brand === filterValue);
         break;

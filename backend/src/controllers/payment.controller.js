@@ -8,7 +8,7 @@ export const createStripePayment = asyncHandler(async (req, res) => {
     const { orderId, amount } = req.body;
 
     const paymentIntent = await stripe.paymentIntents.create({
-        amount: amount * 100, // Stripe works in cents
+        amount: Math.round(amount * 100), // Stripe works in cents, Math.round prevents float errors
         currency: "usd",
         payment_method_types: ["card"],
     });

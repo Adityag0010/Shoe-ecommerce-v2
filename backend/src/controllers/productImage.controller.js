@@ -1,6 +1,7 @@
 import { ProductImage } from "../models/productImage.model.js";
 import { uploadToCloudinary } from "../middlewares/upload.middleware.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 export const addProductImageById = async (req, res) => {
   try {
