@@ -36,7 +36,7 @@ const Registration = () => {
 
     try {
       await axios.post(
-        "https://api-shoe-ecommerce.onrender.com/api/v1/auth/register",
+        "http://localhost:5000/api/v1/auth/register",
         formData
       );
       setMessage("🎉 Registration successful!");
@@ -135,6 +135,22 @@ const Registration = () => {
                 className="w-full bg-black text-white py-3 rounded-lg font-bold text-md hover:bg-gray-800 transition-all"
               >
                 {loading ? "Registering..." : "SIGN UP NOW"}
+              </button>
+
+              <div className="relative flex items-center justify-center my-4">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300"></div>
+                </div>
+                <div className="relative px-4 bg-white text-sm text-gray-500">OR</div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => window.location.href = 'http://localhost:5000/api/v1/auth/google'}
+                className="w-full bg-white text-gray-700 border border-gray-300 py-3 rounded-lg font-bold text-md hover:bg-gray-50 flex items-center justify-center transition-all mb-2"
+              >
+                <img src="https://www.google.com/favicon.ico" alt="Google logo" className="w-5 h-5 mr-3" />
+                Sign up with Google
               </button>
               <Link 
                 key='login'

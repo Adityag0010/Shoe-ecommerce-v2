@@ -3,7 +3,9 @@ import { Router } from "express";
 import { register, 
          login, 
          logout,
-        checkAuth } from "../controllers/auth.controller.js";
+        checkAuth,
+        googleAuth,
+        googleCallback } from "../controllers/auth.controller.js";
 
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
@@ -13,5 +15,7 @@ router.post("/register", register);
 router.post("/login", login);
 router.post("/logout", authMiddleware, logout);
 router.get( "/check",  authMiddleware, checkAuth);
+router.get("/google", googleAuth);
+router.get("/google/callback", googleCallback);
 
 export default router;

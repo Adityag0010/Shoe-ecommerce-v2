@@ -2,6 +2,7 @@ import { User } from "../models/model-export.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { OAuth2Client } from 'google-auth-library';
 
 const generateAccessAndRefreshTokens = async(userId) => {
     try {
@@ -147,4 +148,72 @@ export const checkAuth = asyncHandler(async (req, res) => {
   return res.status(200).json(
     new ApiResponse(200, "User is logged in", { isLoggedIn: true, userId: req.user._id })
   );
+});
+
+export const googleAuth = asyncHandler(async (req, res) => {
+    const client = new OAuth2Client(
+      process.env.GOOGLE_CLIENT_ID,
+      process.env.GOOGLE_CLIENT_SECRET,
+      process.env.GOOGLE_REDIRECT_URI
+    );
+    const authorizeUrl = client.generateAuthUrl({
+      access_type: 'offline',
+      scope: ['https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email'],
+    });
+    res.redirect(authorizeUrl);
+});
+
+export const googleCallback = asyncHandler(async (req, res) => {
+    const { code } = req.query;
+    if (!code) {
+        return res.redirect('http://localhost:5173/login?error=Google_Auth_Failed');
+    }
+
+    try {
+        const client = new OAuth2Client(
+          process.env.GOOGLE_CLIENT_ID,
+          process.env.GOOGLE_CLIENT_SECRET,
+          process.env.GOOGLE_REDIRECT_URI
+        );
+
+        const { tokens } = await client.getToken(code);
+        client.setCredentials(tokens);
+
+        const ticket = await client.verifyIdToken({
+            idToken: tokens.id_token,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+
+        const payload = ticket.getPayload();
+        const { email, name } = payload;
+
+        let user = await User.findOne({ email });
+
+        if (!user) {
+            user = await User.create({
+                fullName: name,
+                email: email,
+                password: Math.random().toString(36).slice(-10) + Math.random().toString(36).slice(-10),
+                role: 'customer'
+            });
+        }
+
+        const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(user._id);
+
+        const options = {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none", // since frontend is usually on a different port during dev
+            path: '/',     
+            maxAge: 7 * 24 * 60 * 60 * 1000, 
+        };
+
+        res.cookie("accessToken", accessToken, options)
+           .cookie("refreshToken", refreshToken, options)
+           .redirect('http://localhost:5173/'); 
+
+    } catch (error) {
+        console.error("Google Auth Error:", error);
+        res.redirect('http://localhost:5173/login?error=Google_Auth_Error');
+    }
 });
