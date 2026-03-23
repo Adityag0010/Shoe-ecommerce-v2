@@ -146,7 +146,7 @@ export const checkAuth = asyncHandler(async (req, res) => {
   }
 
   return res.status(200).json(
-    new ApiResponse(200, "User is logged in", { isLoggedIn: true, userId: req.user._id })
+    new ApiResponse(200, "User is logged in", { isLoggedIn: true, userId: req.user._id, role: req.user.role })
   );
 });
 

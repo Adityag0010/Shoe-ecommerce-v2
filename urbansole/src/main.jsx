@@ -17,6 +17,7 @@ const DummyFooterNavpage = lazy(() => import('./components/FooterNav/DummyNavpag
 const AllShoePage = lazy(() => import('./components/allShoePage.jsx'));
 const ProfilePage = lazy(() => import('./components/userProfilePage/Userprofile'));
 const AdminPanelApp = lazy(() => import('./components/Admin/AdminPanel.jsx'));
+import AdminRoute from './components/Admin/AdminRoute.jsx';
 const Home = lazy(() => import('./components/home-page/home-page'));
 const LoginPage = lazy(() => import('./components/Registration/Login.jsx'));
 const CartPage = lazy(() => import('./components/Cart/cart.jsx'));
@@ -75,7 +76,11 @@ const AppRouter = createBrowserRouter([
       },
       {
         path: 'admin',
-        element: <AdminPanelApp />
+        element: (
+          <AdminRoute>
+            <AdminPanelApp />
+          </AdminRoute>
+        )
       },
       {
         path: 'cart',

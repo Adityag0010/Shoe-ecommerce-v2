@@ -10,6 +10,7 @@ import ShimmerHome from './components/Shimmer_UIs/home_shimmer';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userRole, setUserRole] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -25,11 +26,14 @@ function App() {
         );
         if (res.data.data.isLoggedIn) {
           setIsLoggedIn(true);
+          setUserRole(res.data.data.role);
         } else {
           setIsLoggedIn(false);
+          setUserRole(null);
         }
       } catch (error) {
         setIsLoggedIn(false);
+        setUserRole(null);
       } finally {
         setLoading(false);
       }
@@ -64,7 +68,7 @@ function App() {
         onClose={() => setIsModalOpen(false)}
         onLoginSuccess={handleLoginSuccess}
       />
-      <Outlet />
+      <Outlet context={{ isLoggedIn, userRole }} />
       <Footer />
     </AuthProvider>
   );
