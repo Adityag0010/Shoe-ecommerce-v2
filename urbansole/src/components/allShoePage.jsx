@@ -119,7 +119,7 @@ export default function AllShoePage() {
       }
 
       const response = await axios.get(
-        `http://localhost:5000/api/v1/products/filter/${suffix}`,
+        `https://shoe-ecommerce-v2.onrender.com/api/v1/products/filter/${suffix}`,
         { params }
       );
 

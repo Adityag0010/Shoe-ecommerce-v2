@@ -17,7 +17,7 @@ const NewArrivalSection = () => {
   const fetchShoes = async () => {    
     try {
       const response = 
-        await axios.get("http://localhost:5000/api/v1/products/filter/attribute",{
+        await axios.get("https://shoe-ecommerce-v2.onrender.com/api/v1/products/filter/attribute",{
           params: { attribute: "newArrival", limit: 16 }
         });
       setShoes(response?.data?.data);

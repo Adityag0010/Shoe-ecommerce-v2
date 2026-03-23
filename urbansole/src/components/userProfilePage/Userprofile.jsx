@@ -41,7 +41,7 @@ const ProfilePage = () => {
     // This function fetches the user's profile data from the backend
     const fetchProfileData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/v1/users/profile', {
+        const response = await axios.get('https://shoe-ecommerce-v2.onrender.com/api/v1/users/profile', {
           withCredentials: true 
         });
         
@@ -71,7 +71,7 @@ const ProfilePage = () => {
     const fetchOrderHistory = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('http://localhost:5000/api/v1/orders', {
+        const response = await axios.get('https://shoe-ecommerce-v2.onrender.com/api/v1/orders', {
           withCredentials: true 
         });        
         setOrderHistory(response?.data?.data);
@@ -97,7 +97,7 @@ const ProfilePage = () => {
   
   const handleLogout = async () => {
     try {
-      await axios.post('http://localhost:5000/api/v1/auth/logout', {}, {
+      await axios.post('https://shoe-ecommerce-v2.onrender.com/api/v1/auth/logout', {}, {
         withCredentials: true 
       });
       navigate('/');

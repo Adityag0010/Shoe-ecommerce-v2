@@ -21,7 +21,7 @@ export default function AddProductImagesModal({ productId, onClose }) {
   };
   const getProductName = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/v1/products/' + productId);
+      const response = await axios.get('https://shoe-ecommerce-v2.onrender.com/api/v1/products/' + productId);
       setProductName(response.data.data.name);
     } catch (error) {
       console.error('Error fetching product name:', error);
@@ -44,7 +44,7 @@ export default function AddProductImagesModal({ productId, onClose }) {
       sides.forEach((file) => formData.append('sides', file));
 
       await axios.post(
-        `http://localhost:5000/api/v1/product-images/${productId}/images`,
+        `https://shoe-ecommerce-v2.onrender.com/api/v1/product-images/${productId}/images`,
         formData,
         {
           headers: { 'Content-Type': 'multipart/form-data' },

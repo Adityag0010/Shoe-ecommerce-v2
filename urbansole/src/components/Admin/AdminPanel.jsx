@@ -142,7 +142,7 @@ const AdminPanelApp = () => {
     setError(null);
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/v1/products"
+        "https://shoe-ecommerce-v2.onrender.com/api/v1/products"
       );
       console.log("got the data : ", response?.data);
 
@@ -163,7 +163,7 @@ const AdminPanelApp = () => {
     try {
       console.log("New Product Data:", newProduct);
       const response = await axios.post(
-        "http://localhost:5000/api/v1/products",
+        "https://shoe-ecommerce-v2.onrender.com/api/v1/products",
         newProduct,
         { withCredentials: true }
       );
@@ -187,7 +187,7 @@ const AdminPanelApp = () => {
     console.log("Saving updated product id :", updatedProduct);
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/v1/products/${id}`,
+        `https://shoe-ecommerce-v2.onrender.com/api/v1/products/${id}`,
         updatedProduct,
         { withCredentials: true }
       );
@@ -212,7 +212,7 @@ const AdminPanelApp = () => {
       return;
     try {
       await axios.delete(
-        `http://localhost:5000/api/v1/products/${id}`,
+        `https://shoe-ecommerce-v2.onrender.com/api/v1/products/${id}`,
         { withCredentials: true }
       );
       setProducts(products.filter((p) => p._id !== id));

@@ -3,7 +3,7 @@ import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router';
 
-const API_BASE_URL = 'http://localhost:5000/api/v1';
+const API_BASE_URL = 'https://shoe-ecommerce-v2.onrender.com/api/v1';
 
 const Checkout = () => {
     const [order, setOrder] = useState(null);

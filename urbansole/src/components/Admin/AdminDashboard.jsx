@@ -44,7 +44,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const { data } = await axios.get('http://localhost:5000/api/v1/admin/dashboard', { withCredentials: true });
+        const { data } = await axios.get('https://shoe-ecommerce-v2.onrender.com/api/v1/admin/dashboard', { withCredentials: true });
         console.log("Dashboard API response:", data);
         if (data && data.data) {
           setStats(data.data);

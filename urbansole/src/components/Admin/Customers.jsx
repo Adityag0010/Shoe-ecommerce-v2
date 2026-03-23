@@ -9,7 +9,7 @@ export default function Customers() {
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/v1/admin/users", {
+        const response = await axios.get("https://shoe-ecommerce-v2.onrender.com/api/v1/admin/users", {
           withCredentials: true,
         });
         console.log("Customers API response:", response.data);
