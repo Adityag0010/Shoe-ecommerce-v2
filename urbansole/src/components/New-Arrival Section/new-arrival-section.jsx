@@ -7,49 +7,49 @@ import { Key } from "lucide-react";
 
 const NewArrivalSection = () => {
   console.log("Call in NewArrival Section");
-  
+
 
   const [active, setActive] = useState("shoes");
   const [data, setShoes] = useState([]);
   const [loading, setLoading] = useState(true);
 
 
-  const fetchShoes = async () => {    
+  const fetchShoes = async () => {
     try {
-      const response = 
-        await axios.get("https://shoe-ecommerce-v2.onrender.com/api/v1/products/filter/attribute",{
-          params: { attribute: "newArrival", limit: 16 }
+      const response =
+        await axios.get("https://shoe-ecommerce-v2.onrender.com/api/v1/products/filter/attribute", {
+          params: { attribute: "newArrival" }
         });
       setShoes(response?.data?.data);
     } catch (error) {
       console.error("Error fetching shoes data:", error);
-    }finally{
+    } finally {
       setLoading(false)
     }
   };
-  
+
   useEffect(() => {
     fetchShoes();
   }, []);
-  
-  const arr = [0,0,0,0]
+
+  const arr = [0, 0, 0, 0]
   if (loading) {
-    return(
-     <>
+    return (
+      <>
         <div className="w-full mx-auto px-24 py-12 bg-white">
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-x-5 gap-y-7">
-                {arr.map((index) => (
-                  <div Key={index}>
-                    <ShimmerShoeCard/>
-                  </div>
-                ))}
-            </div>
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-x-5 gap-y-7">
+            {arr.map((index) => (
+              <div Key={index}>
+                <ShimmerShoeCard />
+              </div>
+            ))}
+          </div>
         </div>
       </>
     );
   }
- 
-  const filteredData  = data.filter((item) => item.category.name === active);  
+
+  const filteredData = data.filter((item) => item.category.name === active);
   console.log("Filtered shoes data after category filter:", filteredData.length, filteredData);
 
   return (
@@ -75,7 +75,7 @@ const NewArrivalSection = () => {
           No items matching the criteria
         </div>
       )}
-    
+
     </div>
   );
 };
@@ -103,14 +103,12 @@ function TypeTab({ active, setActive }) {
       {/* Underline */}
       <div className="flex mt-2 w-40">
         <div
-          className={`h-1 w-1/2 transition-all duration-500 ${
-            active === "shoes" ? "bg-red-600" : "bg-gray-300"
-          }`}
+          className={`h-1 w-1/2 transition-all duration-500 ${active === "shoes" ? "bg-red-600" : "bg-gray-300"
+            }`}
         ></div>
         <div
-          className={`h-1 w-1/2 transition-all duration-500 ${
-            active === "crocs" ? "bg-red-600" : "bg-gray-300"
-          }`}
+          className={`h-1 w-1/2 transition-all duration-500 ${active === "crocs" ? "bg-red-600" : "bg-gray-300"
+            }`}
         ></div>
       </div>
     </div>

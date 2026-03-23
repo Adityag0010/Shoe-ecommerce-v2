@@ -4,52 +4,52 @@ import axios from 'axios'
 import ShimmerShoeCard from "../Shimmer_UIs/shoe_card_shimmer";
 
 const TrendingSection = () => {
-  const [active, setActive] = useState("Male"); 
+  const [active, setActive] = useState("Male");
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true)
 
   console.log("Trending carousel called.... ");
 
-  
-  const fetchShoes = async () => {  
+
+  const fetchShoes = async () => {
     try {
-      const response = 
-        await axios.get("https://shoe-ecommerce-v2.onrender.com/api/v1/products/filter/attribute",{
-          params: {attribute: "trending", limit: 14}
+      const response =
+        await axios.get("https://shoe-ecommerce-v2.onrender.com/api/v1/products/filter/attribute", {
+          params: { attribute: "trending" }
         });
-        setData(response?.data?.data);
+      setData(response?.data?.data);
     } catch (error) {
       console.error("Error fetching shoes data in trending section:", error);
-    }finally{
+    } finally {
       setLoading(false)
     }
   };
-  
+
   useEffect(() => {
     fetchShoes();
   }, []);
-  const arr = [0,0,0,0];
-  
+  const arr = [0, 0, 0, 0];
+
   if (loading) {
-    return(
+    return (
       <>
-          <div className="w-full mx-auto px-24 py-12 bg-white">
-              <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-x-5 gap-y-7">
-                  {arr.map((index) => (
-                    <div Key={index}>     
-                      <ShimmerShoeCard/>
-                    </div>
-                  ))}
+        <div className="w-full mx-auto px-24 py-12 bg-white">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-x-5 gap-y-7">
+            {arr.map((index) => (
+              <div Key={index}>
+                <ShimmerShoeCard />
               </div>
+            ))}
           </div>
+        </div>
       </>
     );
   }
 
 
-  const filteredData  = data.filter((item) => item?.for === active);
-  console.log("Filtered data in trending section : " ,filteredData.length);
-  
+  const filteredData = data.filter((item) => item?.for === active);
+  console.log("Filtered data in trending section : ", filteredData.length);
+
   return (
     <div className="bg-white text-black py-10">
       <h1 className="text-center font-bold text-3xl mb-5 mr-10 pr-10">TRENDING</h1>
@@ -98,14 +98,12 @@ function GenderTabs({ active, setActive }) {
       {/* Underline */}
       <div className="flex mt-2 w-40">
         <div
-          className={`h-1 w-1/2 transition-all duration-500 ${
-            active === "Male" ? "bg-red-600" : "bg-gray-300"
-          }`}
+          className={`h-1 w-1/2 transition-all duration-500 ${active === "Male" ? "bg-red-600" : "bg-gray-300"
+            }`}
         ></div>
         <div
-          className={`h-1 w-1/2 transition-all duration-500 ${
-            active === "Female" ? "bg-red-600" : "bg-gray-300"
-          }`}
+          className={`h-1 w-1/2 transition-all duration-500 ${active === "Female" ? "bg-red-600" : "bg-gray-300"
+            }`}
         ></div>
       </div>
     </div>
