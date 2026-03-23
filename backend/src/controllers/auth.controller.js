@@ -166,7 +166,7 @@ export const googleAuth = asyncHandler(async (req, res) => {
 export const googleCallback = asyncHandler(async (req, res) => {
     const { code } = req.query;
     if (!code) {
-        return res.redirect('http://localhost:5173/login?error=Google_Auth_Failed');
+        return res.redirect('https://shoeecommercev2.vercel.app/login?error=Google_Auth_Failed');
     }
 
     try {
@@ -210,10 +210,10 @@ export const googleCallback = asyncHandler(async (req, res) => {
 
         res.cookie("accessToken", accessToken, options)
            .cookie("refreshToken", refreshToken, options)
-           .redirect('http://localhost:5173/'); 
+           .redirect('https://shoeecommercev2.vercel.app/'); 
 
     } catch (error) {
         console.error("Google Auth Error:", error);
-        res.redirect('http://localhost:5173/login?error=Google_Auth_Error');
+        res.redirect('https://shoeecommercev2.vercel.app/login?error=Google_Auth_Error');
     }
 });

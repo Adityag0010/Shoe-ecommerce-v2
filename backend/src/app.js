@@ -16,6 +16,7 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
   : [
       "https://shoe-ecommerce-mu.vercel.app",
       "https://urbansole-pi.vercel.app",
+      "https://shoeecommercev2.vercel.app",
       "https://localhost:5137",
       "http://localhost:3000",
       "http://localhost:5173"
