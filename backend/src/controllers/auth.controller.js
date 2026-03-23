@@ -158,6 +158,7 @@ export const googleAuth = asyncHandler(async (req, res) => {
     );
     const authorizeUrl = client.generateAuthUrl({
       access_type: 'offline',
+      prompt: 'select_account',
       scope: ['https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email'],
     });
     res.redirect(authorizeUrl);
