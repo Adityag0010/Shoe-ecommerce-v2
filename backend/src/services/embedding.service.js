@@ -45,3 +45,37 @@ export async function generateAndStoreEmbedding(shoeId, descriptionText) {
     }
   }
 }
+
+export async function getEmbeddingVector(text) {
+  if (!process.env.GEMINI_API_KEY) {
+    throw new Error("❌ GEMINI_API_KEY is missing from environment variables!");
+  }
+
+  try {
+    console.log(`Generating embedding for chat query: "${text.substring(0, 40)}..."`);
+
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=${process.env.GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "models/gemini-embedding-001",
+          content: { parts: [{ text }] },
+          outputDimensionality: 768
+        })
+      }
+    );
+
+    if (!response.ok) {
+      const errBody = await response.text();
+      throw new Error(`Gemini API error (${response.status}): ${errBody}`);
+    }
+
+    const data = await response.json();
+    return data.embedding.values;
+  } catch (error) {
+    console.error("❌ Gemini Error during chat embedding:", error.message);
+    throw error;
+  }
+}

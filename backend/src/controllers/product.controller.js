@@ -1,39 +1,38 @@
+import mongoose from "mongoose";
 import { Product, ProductImage, Review, Category } from "../models/model-export.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { generateAndStoreEmbedding } from "../services/embedding.service.js";
+import { generateAndStoreEmbedding, getEmbeddingVector } from "../services/embedding.service.js";
 import { ProductDescription } from "../models/productDescription.model.js";
 // CRUD
 export const createProduct = asyncHandler(async (req, res) => {
-    const product = await Product.create(req.body);
+  const product = await Product.create(req.body);
 
-    if (req.body.description) {
-        console.log("Triggering background embedding generation...");
-        generateAndStoreEmbedding(product._id, req.body.description).catch(err => {
-            console.error("Background embedding failed:", err);
-        });
-    }
+  if (req.body.description) {
+    console.log("Triggering background embedding generation...");
+    generateAndStoreEmbedding(product._id, req.body.description).catch(err => {
+      console.error("Background embedding failed:", err);
+    });
+  }
 
-    res.status(201).json(
-        new ApiResponse(201, "Product created successfully", product)
-    );
+  res.status(201).json(
+    new ApiResponse(201, "Product created successfully", product)
+  );
 });
 
 
 
 export const getSimilarShoes = asyncHandler(async (req, res) => {
-    try{
-      const { shoe_id } = req.params;
-      const sourceDoc = await ProductDescription.findOne({ shoe_id: shoe_id });
-      console.log("shoe_id :: ", shoe_id);
-      
-      if (!sourceDoc) {
-        return res.status(404).json({ message: "Embedding not found for this product" });
-      }
+  try {
+    const { shoe_id } = req.params;
+    const sourceDoc = await ProductDescription.findOne({ shoe_id: shoe_id });
+    console.log("shoe_id :: ", shoe_id);
 
-      // console.log("embedding :: ", sourceDoc);
-      
-      // STEP 2: Run Aggregation Pipeline on 'ProductDescription'
+    if (!sourceDoc) {
+      return res.status(404).json({ message: "Embedding not found for this product" });
+    }
+
+    // STEP 2: Run Aggregation Pipeline on 'ProductDescription'
     const recommendations = await ProductDescription.aggregate([
       {
         // A. Find similar IDs based on vector
@@ -48,13 +47,13 @@ export const getSimilarShoes = asyncHandler(async (req, res) => {
       {
         // B. Exclude the current shoe itself
         // Assuming 'id' in this collection matches the 'shoe_id'
-        "$match": { 
-          "shoe_id": { "$ne": sourceDoc.shoe_id } 
-        } 
+        "$match": {
+          "shoe_id": { "$ne": sourceDoc.shoe_id }
+        }
       },
       {
         // C. Limit to top 5 before doing the heavy lookup
-        "$limit": 5 
+        "$limit": 5
       },
       {
         // D. JOIN with the main 'products' collection
@@ -86,64 +85,64 @@ export const getSimilarShoes = asyncHandler(async (req, res) => {
       }
     ]);
     console.log("recommendation : ", recommendations);
-    
+
     res.json(recommendations);
     console.log("similar shoes given:  ");
-    
-    }catch(err){
-        console.error("Error fetching similar shoes:", err);
-        return res.status(500).json(new ApiResponse(500, "Internal server error", null));
-    }
+
+  } catch (err) {
+    console.error("Error fetching similar shoes:", err);
+    return res.status(500).json(new ApiResponse(500, "Internal server error", null));
+  }
 });
 
 
 export const getProductDescriptions = asyncHandler(async (req, res) => {
-    console.log("Fetching product descriptions from database...");
-    const descriptions = await ProductDescription.find();
+  console.log("Fetching product descriptions from database...");
+  const descriptions = await ProductDescription.find();
 
-    res.status(200).json(
-        new ApiResponse(200, "Product descriptions fetched successfully", descriptions)
-    );
+  res.status(200).json(
+    new ApiResponse(200, "Product descriptions fetched successfully", descriptions)
+  );
 });
 
 export const getProducts = asyncHandler(async (req, res) => {
-    console.log("Fetching products from database...");
-    
-    const products = await Product.find().populate("category").populate("imageSet");
+  console.log("Fetching products from database...");
 
-    res.status(200).json(
-        new ApiResponse(200, "Products fetched successfully", products)
-    );
+  const products = await Product.find().populate("category").populate("imageSet");
+
+  res.status(200).json(
+    new ApiResponse(200, "Products fetched successfully", products)
+  );
 });
 
 export const getProductById = asyncHandler(async (req, res) => {
-    const product = await Product.findById(req.params.id).populate("category").populate("imageSet");
+  const product = await Product.findById(req.params.id).populate("category").populate("imageSet");
 
-    res.status(200).json(
-        new ApiResponse(200, "Product fetched successfully", product)
-    );
+  res.status(200).json(
+    new ApiResponse(200, "Product fetched successfully", product)
+  );
 });
 
 export const getProductsByAttribute = asyncHandler(async (req, res) => {
-    
-    const { attribute, limit } = req.query;
-    console.log("Request for the get Product of attribute ", attribute);
-    
-    const attr = attribute || "trending";
-    const max = Number(limit) || 10;
+
+  const { attribute, limit } = req.query;
+  console.log("Request for the get Product of attribute ", attribute);
+
+  const attr = attribute || "trending";
+  const max = Number(limit) || 20;
 
 
-    const products = await Product.find({ attributes: attr })
-        .limit(max)
-        .populate("category")
-        .populate({
-            path: "imageSet",
-            select: "thumbnail hover"
-        });
+  const products = await Product.find({ attributes: attr })
+    .limit(max)
+    .populate("category")
+    .populate({
+      path: "imageSet",
+      select: "thumbnail hover"
+    });
 
-    res.status(200).json(
-        new ApiResponse(200, `Products with attribute '${attr}' fetched successfully`, products)
-    );
+  res.status(200).json(
+    new ApiResponse(200, `Products with attribute '${attr}' fetched successfully`, products)
+  );
 });
 
 export const getProductsByBrand = asyncHandler(async (req, res) => {
@@ -151,7 +150,7 @@ export const getProductsByBrand = asyncHandler(async (req, res) => {
   console.log("Request for the get Product of brand:", brand);
 
   const brandName = brand || "Puma";
-  const max = Number(limit) || 10;
+  const max = Number(limit) || 20;
 
   if (!brandName) {
     return res.status(400).json(
@@ -203,8 +202,8 @@ export const getProductsByGender = asyncHandler(async (req, res) => {
   const { gender, limit } = req.query;
   console.log("Request for the get Product of gender:", gender);
 
-  const genderValue = gender || "Male"; 
-  const max = Number(limit) || 10;
+  const genderValue = gender || "Male";
+  const max = Number(limit) || 20;
 
   const products = await Product.find({ for: genderValue })
     .limit(max)
@@ -223,10 +222,10 @@ export const getProductsByGender = asyncHandler(async (req, res) => {
 export const getProductsByCategory = asyncHandler(async (req, res) => {
 
   const { category, limit } = req.query;
-  console.log("request for :" , category , " shoes");
-  
+  console.log("request for :", category, " shoes");
+
   const categoryName = category || "shoes";
-  const max = Number(limit) || 10;
+  const max = Number(limit) || 20;
 
   if (!categoryName) {
     return res.status(400).json(
@@ -258,32 +257,32 @@ export const getProductsByCategory = asyncHandler(async (req, res) => {
 
 
 export const updateProduct = asyncHandler(async (req, res) => {
-    const product = await Product.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        { new: true }
-    );
+  const product = await Product.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    { new: true }
+  );
 
-    res.status(200).json(
-        new ApiResponse(200, "Product updated successfully", product)
-    );
+  res.status(200).json(
+    new ApiResponse(200, "Product updated successfully", product)
+  );
 });
 
 export const deleteProduct = asyncHandler(async (req, res) => {
-    await Product.findByIdAndDelete(req.params.id);
+  await Product.findByIdAndDelete(req.params.id);
 
-    res.status(200).json(
-        new ApiResponse(200, "Product deleted successfully", null)
-    );
+  res.status(200).json(
+    new ApiResponse(200, "Product deleted successfully", null)
+  );
 });
 
 // Product images
 export const addProductImage = asyncHandler(async (req, res) => {
-    const image = await ProductImage.create(req.body);
+  const image = await ProductImage.create(req.body);
 
-    res.status(201).json(
-        new ApiResponse(201, "Product image added successfully", image)
-    );
+  res.status(201).json(
+    new ApiResponse(201, "Product image added successfully", image)
+  );
 });
 
 
@@ -291,30 +290,155 @@ export const addProductImage = asyncHandler(async (req, res) => {
 
 // Reviews
 export const addReview = asyncHandler(async (req, res) => {
-    const review = await Review.create({
-        userId: req.user.id,
-        productId: req.body.productId,
-        rating: req.body.rating,
-        reviewText: req.body.reviewText,
-    });
+  const review = await Review.create({
+    userId: req.user.id,
+    productId: req.body.productId,
+    rating: req.body.rating,
+    reviewText: req.body.reviewText,
+  });
 
-    res.status(201).json(
-        new ApiResponse(201, "Review added successfully", review)
-    );
+  res.status(201).json(
+    new ApiResponse(201, "Review added successfully", review)
+  );
 });
 
 export const getProductReviews = asyncHandler(async (req, res) => {
-    const reviews = await Review.find({ productId: req.params.id }).populate("userId");
+  const reviews = await Review.find({ productId: req.params.id }).populate("userId");
 
-    const avgRating = reviews.length > 0
-        ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1)
-        : 0;
+  const avgRating = reviews.length > 0
+    ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1)
+    : 0;
+
+  res.status(200).json(
+    new ApiResponse(
+      200,
+      "Product reviews fetched successfully",
+      { avgRating, count: reviews.length, reviews }
+    )
+  );
+});
+
+// Helper: parse category and price from a natural language query
+function parseChatQuery(query) {
+  const lowerQ = query.toLowerCase();
+  const filters = {};
+
+  // Category detection
+  const CATEGORY_MAP = {
+    shoes: "68c2b3c360f6de3da49615b2",
+    shoe: "68c2b3c360f6de3da49615b2",
+    sneaker: "68c2b3c360f6de3da49615b2",
+    sneakers: "68c2b3c360f6de3da49615b2",
+    sports: "68c2b3c360f6de3da49615b2",
+    running: "68c2b3c360f6de3da49615b2",
+    clogs: "68c2b3f260f6de3da49615b3",
+    clog: "68c2b3f260f6de3da49615b3",
+  };
+
+  for (const [keyword, catId] of Object.entries(CATEGORY_MAP)) {
+    if (lowerQ.includes(keyword)) {
+      filters.category = catId;
+      break;
+    }
+  }
+
+  // Price detection  e.g. "under 3k", "below 5000", "under 2.5k", "less than 4000"
+  const priceMatch = lowerQ.match(/(?:under|below|less\s*than|within|upto|up\s*to|max)\s*(?:rs\.?|₹|inr)?\s*(\d+(?:\.\d+)?)\s*(k|thousand)?/);
+  if (priceMatch) {
+    let price = parseFloat(priceMatch[1]);
+    if (priceMatch[2]) price *= 1000; // "3k" → 3000
+    filters.maxPrice = price;
+  }
+
+  console.log("Parsed filters:", filters);
+  return filters;
+}
+
+export const getChatRecommendations = asyncHandler(async (req, res) => {
+  try {
+    const { query } = req.body;
+    if (!query) {
+      return res.status(400).json(new ApiResponse(400, "Query is required"));
+    }
+
+    console.log("Chatbot query:", query);
+    const queryVector = await getEmbeddingVector(query);
+    const filters = parseChatQuery(query);
+
+    // Build a post-vector-search $match filter
+    const matchFilter = {};
+    if (filters.category) {
+      matchFilter["fullProductInfo.category"] = new mongoose.Types.ObjectId(filters.category);
+    }
+    if (filters.maxPrice) {
+      matchFilter["fullProductInfo.price"] = { "$lte": filters.maxPrice };
+    }
+
+    const pipeline = [
+      {
+        "$vectorSearch": {
+          "index": "vector_index",
+          "path": "embedding_description",
+          "queryVector": queryVector,
+          "numCandidates": 50,
+          "limit": 10
+        }
+      },
+      {
+        "$lookup": {
+          "from": "products",
+          "localField": "shoe_id",
+          "foreignField": "_id",
+          "as": "fullProductInfo"
+        }
+      },
+      {
+        "$unwind": "$fullProductInfo"
+      },
+    ];
+
+    // Apply category/price filter if detected
+    if (Object.keys(matchFilter).length > 0) {
+      pipeline.push({ "$match": matchFilter });
+    }
+
+    pipeline.push(
+      { "$limit": 3 },
+      {
+        "$lookup": {
+          "from": "productimages",
+          "localField": "fullProductInfo._id",
+          "foreignField": "productId",
+          "as": "imageInfo"
+        }
+      },
+      {
+        "$unwind": { "path": "$imageInfo", "preserveNullAndEmptyArrays": true }
+      },
+      {
+        "$project": {
+          "_id": "$fullProductInfo._id",
+          "name": "$fullProductInfo.name",
+          "brand": "$fullProductInfo.brand",
+          "for": "$fullProductInfo.for",
+          "color": "$fullProductInfo.color",
+          "category": "$fullProductInfo.category",
+          "rating": "$fullProductInfo.rating",
+          "price": "$fullProductInfo.price",
+          "thumbnail": "$imageInfo.thumbnail",
+          "matchScore": { "$meta": "vectorSearchScore" }
+        }
+      }
+    );
+
+    const recommendations = await ProductDescription.aggregate(pipeline);
 
     res.status(200).json(
-        new ApiResponse(
-            200,
-            "Product reviews fetched successfully",
-            { avgRating, count: reviews.length, reviews }
-        )
+      new ApiResponse(200, "Chatbot recommendations fetched successfully", recommendations)
     );
+  } catch (err) {
+    console.error("Error fetching chat recommendations:", err);
+    return res.status(500).json(new ApiResponse(500, err.message, null));
+  }
 });
+

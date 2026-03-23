@@ -14,7 +14,8 @@ import {
     addReview, 
     getProductReviews,
     getProductDescriptions,
-    getSimilarShoes
+    getSimilarShoes,
+    getChatRecommendations
 } from "../controllers/product.controller.js";
 import { authMiddleware, adminMiddleware } from "../middlewares/auth.middleware.js";
 import { cacheMiddleware } from "../utils/cache.js";
@@ -31,6 +32,7 @@ router.get("/filter/gender", getProductsByGender);
 router.get("/filter/category", getProductsByCategory);
 router.get("/filter/related",  getRelatedShoes);
 router.get('/recommend/:shoe_id', getSimilarShoes);
+router.post("/chat", getChatRecommendations);
 router.get("/:id", getProductById);
 router.put("/:id", authMiddleware, adminMiddleware, updateProduct);
 router.delete("/:id", authMiddleware, adminMiddleware, deleteProduct);

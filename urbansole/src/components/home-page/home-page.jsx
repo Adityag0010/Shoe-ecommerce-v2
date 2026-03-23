@@ -8,23 +8,23 @@ import AdCard2 from "./adCard2";
 import AdCard3 from "./adCard3";
 import ImageSlider from '../ImageSlider';
 
-const Home = ()=>{
+const Home = () => {
     console.log("Home-page.jsx called...");
     console.log("carouselCard.jsx caled....");
-    return(
+    return (
         <>
             <Helmet>
                 <title>UrbanSole | Premium Quality Shoes & Sneakers</title>
                 <meta name="description" content="Shop the latest and trending shoes at UrbanSole. Fast delivery, premium materials, and top brands all in one place." />
-                <link rel="canonical" href="https://urbansole-pi.vercel.app/" />
+                <link rel="canonical" href="https://shoeecommercev2.vercel.app/" />
             </Helmet>
-            <ImageSlider/>
-            <TrendingSection/>
-            <BrandCarousel/>
-            <NewArrivalSection/>
-            <AdCard2/>
-            <AdCard3/>
-            <AdCard/>
+            <ImageSlider />
+            <TrendingSection />
+            <BrandCarousel />
+            <NewArrivalSection />
+            <AdCard2 />
+            <AdCard3 />
+            <AdCard />
         </>
     );
 }

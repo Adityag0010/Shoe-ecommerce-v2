@@ -4,7 +4,7 @@ import axios from 'axios'
 import ShimmerShoeCard from "../Shimmer_UIs/shoe_card_shimmer";
 
 const TrendingSection = () => {
-  const [active, setActive] = useState("Male");
+  const [active, setActive] = useState("Female");
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true)
 

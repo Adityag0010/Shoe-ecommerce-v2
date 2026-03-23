@@ -7,6 +7,7 @@ import Navbar from './components/Navbar';
 import LoginModal from './components/LoginModal';
 import Footer from './components/footer';
 import ShimmerHome from './components/Shimmer_UIs/home_shimmer';
+import Chatbot from './components/chatbot/Chatbot';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -69,6 +70,7 @@ function App() {
         onLoginSuccess={handleLoginSuccess}
       />
       <Outlet context={{ isLoggedIn, userRole }} />
+      <Chatbot />
       <Footer />
     </AuthProvider>
   );
